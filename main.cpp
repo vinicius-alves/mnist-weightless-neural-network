@@ -18,9 +18,11 @@ void binarize_line(stringstream &threshold_line_stream, bool arr[][784]){
 		}
 
 		for(unshort k =0; k<784; k++){
-			//if(arr[0][k]){ cout<<"1";}
-			//else if (!arr[0][k]){cout<<"0";}
+			if(k%28==0) cout<<endl;
+			if(arr[0][k]){ cout<<"#";}
+			else if (!arr[0][k]){cout<<" ";}
 		}
+
 		cout<<endl;
 }
 
@@ -32,7 +34,7 @@ void binarize_file(ifstream &file, bool arr[][784]){
 	string threshold_line;
 
 
-	for(unshort i =0; i<2; i++){
+	for(unshort i =0; i<10; i++){
 		getline(threshold_stream, threshold_line, first_delimiter);
 		threshold_line_stream.str(threshold_line);
 		//cout<<"line: "<< threshold_line<<endl;
@@ -46,7 +48,7 @@ int main(){
   ifstream myfile;
   myfile.open("teste.txt");
   if (myfile.is_open()){
-  	bool arr[2][784];
+  	bool arr[10][784];
   	binarize_file(myfile, arr);
 
     //getline (myfile,line);
