@@ -45,9 +45,3 @@ void getLabels(char * path, unshort arr[], unshort lines){
     throw invalid_argument( "File not found!" );
   }
 }
-
-int main(){
-    unshort arr[20];
-    getLabels("data/training_labels/train-labels.idx1-ubyte",arr,20);
-    return 0;
-}

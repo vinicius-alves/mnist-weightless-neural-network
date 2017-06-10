@@ -17,9 +17,9 @@ int main(){
   	bool arr[10][784];
   	binarize_file(myfile, arr, 10);
 
-    //getline (myfile,line);
-   // getline (myfile,line);
-   // cout << line << '\n';
+    unshort arr2[20];
+    getLabels("data/training_labels/train-labels.idx1-ubyte",arr2,20);
+    
     myfile.close();
   } else{
   	throw invalid_argument( "File not found!" );
