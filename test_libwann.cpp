@@ -3,8 +3,9 @@
 #include <vector>
 #include <string>
 
+using namespace wann;
 
-
+// compile with g++ test_libwann.cpp -o test -std=c++11 -lwann
 // import and other stuffs
 
 int main(){
@@ -19,7 +20,7 @@ std::vector<std::vector<int>> testing_X;
 int retinaLength = 10;
 int numBitsAddr = 16;
 
-wann::WiSARD *w = new WiSARD(retinaLength, numBitsAddr);
+WiSARD *w = new WiSARD(retinaLength, numBitsAddr);
 
 //w->fit(input_X, input_y);
 
