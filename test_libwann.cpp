@@ -2,30 +2,49 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 using namespace wann;
+using namespace std;
 
-// compile with g++ test_libwann.cpp -o test -std=c++11 -lwann
+// compile with clang++ -Wall test_libwann.cpp -o test -std=c++11 -lwann
 // import and other stuffs
 
 int main(){
 
-std::vector<std::vector<int>> input_X;
-std::vector<std::string> input_y;
-std::vector<std::vector<int>> testing_X;
+	vector<vector<int>> input_X= {
+		{1,0,1,1,1,0},
+		{0,1,1,0,0,1},
+		{0,0,0,1,1,1}
+	};
+	vector<string> input_y = {"a","b","c"};
 
-// load data into input_X, input_y and testing_X
+	vector<vector<int>> testing_X = {
+		{0,0,1,1,1,1},
+		{1,0,1,1,0,0}
+	};
+
+	// load data into input_X, input_y and testing_X
 
 
-int retinaLength = 10;
-int numBitsAddr = 16;
+	int retinaLength = 2;
+	int numBitsAddr = 2;
 
-WiSARD *w = new WiSARD(retinaLength, numBitsAddr);
+	WiSARD *w = new WiSARD(retinaLength, numBitsAddr);
 
-//w->fit(input_X, input_y);
+	w->fit(input_X, input_y);
 
-//vector<string> result = w->predict(testing_X);
+	vector<string> result = w->predict(testing_X);
 
-return 0;
+	vector<unordered_map<string, float>> results = w->predictProba(testing_X);
+
+
+  	for( const auto& n : results[1] ) {
+        cout << "Key:[" << n.first << "] Value:[" << n.second << "]\n";
+    }
+
+	delete w;
+
+	return 0;
 
 }

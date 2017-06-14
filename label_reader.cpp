@@ -7,7 +7,7 @@ using namespace std;
 
 typedef unsigned short unshort;
 
-void lookData(char * path, unshort lines){
+void lookData(const char * path, const unshort lines){
   ifstream labels;
   labels.open(path, ios::binary);
   if (labels.is_open()){
@@ -30,7 +30,7 @@ void lookData(char * path, unshort lines){
   }
 }
 
-void getLabels(char * path, unshort arr[], unshort lines){
+void getLabels(const char * path, unshort arr[], const unshort lines){
   ifstream labels;
   labels.open(path, ios::binary);
   if (labels.is_open()){

@@ -28,17 +28,22 @@ void binarize_line(stringstream &threshold_line_stream, bool arr[][DIMENSION]){
 				
 }
 
-void binarize_file(ifstream &file, bool arr[][DIMENSION], unshort lines){
-	stringstream threshold_stream;
-	stringstream threshold_line_stream;
-	threshold_stream << file.rdbuf();
-	const char first_delimiter ='\n';
-	string threshold_line;
+void binarize_file(const char * path, bool arr[][DIMENSION], const unshort lines){
+	ifstream file;
+ 	file.open(path);
+ 	if (file.is_open()){
+		stringstream threshold_stream;
+		stringstream threshold_line_stream;
+		threshold_stream << file.rdbuf();
+		const char first_delimiter ='\n';
+		string threshold_line;
 
-	for(unshort i =0; i<lines; i++){
-		getline(threshold_stream, threshold_line, first_delimiter);
-		threshold_line_stream.str(threshold_line);
-		binarize_line(threshold_line_stream, arr);
-	}
- 
+		for(unshort i =0; i<lines; i++){
+			getline(threshold_stream, threshold_line, first_delimiter);
+			threshold_line_stream.str(threshold_line);
+			binarize_line(threshold_line_stream, arr);
+		}
+ 	} else{
+  	throw invalid_argument( "File not found!" );
+  	}
 }
