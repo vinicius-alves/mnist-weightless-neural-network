@@ -4,9 +4,10 @@
 #include <string>
 using namespace std;
 
-void lookFiles(const char * path, vector<string> &files){
+vector<string> lookFiles(const char * path){
 
 	DIR *dir;
+	vector<string> files;
 	struct dirent *ent;
 	string name_file;
 	if ((dir = opendir (path)) != NULL) {
@@ -16,18 +17,10 @@ void lookFiles(const char * path, vector<string> &files){
 	  		files.push_back(name_file);
 	  	}
 	  }
+	  return files;
 	  closedir (dir);
 	} else {
 		cout<<"could not open directory"<<endl;
 	}
-}
-
-
-int main(){
-	
-	vector<string> files;
-
-	lookFiles("./data", files);
-
-	return 0;
+	return files;
 }

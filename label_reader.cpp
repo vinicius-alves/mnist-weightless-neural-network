@@ -3,11 +3,12 @@
 #include <stdexcept>
 #include <string>
 #include <bitset>
+#include <vector>
 using namespace std;
 
 typedef unsigned short unshort;
 
-void lookData(const char * path, const unshort lines){
+void lookData(const char * path, const unshort &lines){
   ifstream labels;
   labels.open(path, ios::binary);
   if (labels.is_open()){
@@ -30,7 +31,7 @@ void lookData(const char * path, const unshort lines){
   }
 }
 
-void getLabels(const char * path, unshort arr[], const unshort lines){
+/*void getLabels(const char * path, unshort arr[], const unshort &lines){
   ifstream labels;
   labels.open(path, ios::binary);
   if (labels.is_open()){
@@ -40,6 +41,25 @@ void getLabels(const char * path, unshort arr[], const unshort lines){
           if(counter>7) arr[counter-8] = int(c);
         }
 
+    labels.close();
+  } else{
+    throw invalid_argument( "File not found!" );
+  }
+}*/
+
+vector<string> getLabels(const char * path, const unshort &lines){
+  ifstream labels;
+  vector<string> result(lines);
+  labels.open(path, ios::binary);
+  if (labels.is_open()){
+        char c; 
+        for(unshort counter =0;counter<lines + 8;counter++) {
+          labels.get(c);
+          if(counter>7){ 
+            result[counter-8] = to_string(int(c));
+          }
+        }
+        return result;
     labels.close();
   } else{
     throw invalid_argument( "File not found!" );
