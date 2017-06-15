@@ -16,11 +16,3 @@ void save_contents(string content){
   cout<<"Salvo em ./"<<filename<<endl;
 
 }
-
-int main () {
-  string content = "Hello world";
-
-  save_contents(content);
-
-  return 0;
-}

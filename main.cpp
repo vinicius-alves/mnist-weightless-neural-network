@@ -5,6 +5,12 @@
 #include "binarize.cpp"
 #include "label_reader.cpp"
 #include "look_files.cpp"
+#include "writer.cpp"
+#include "prefix.cpp"
+
+#define TRAINING_LINES 60000
+#define TEST_LINES 10000
+#define MAX_BLEACHING 2
 
 using namespace wann;
 using namespace std;
@@ -14,54 +20,64 @@ typedef unsigned short unshort;
 
 int main(){
 
-	const unshort training_lines = 60000;
-	const unshort test_lines = 10000;
+	WiSARD *w;
 	const int retinaLength = 784;
-	const int numBitsAddr = 10;
+	const int numBitsAddr = 45;
 
 	vector<vector<int>> input_x;
 	vector<vector<int>> testing_x;
 	vector<string> training_labels;
 	vector<string> test_labels;
 	vector<string> result;
+	string contents = "";
+	string name_file_training;
+	string name_file_test;
 	unshort counter;
+	float acuracy;
 
 	vector<string> training_files = lookFiles("data/training_data");
 
-	for (vector<string>::iterator training_file = training_files.begin() ; training_file != training_files.end(); ++training_file){	
+	training_labels = getLabels("data/training_labels/train-labels.idx1-ubyte",TRAINING_LINES);
 
-	  	input_x = binarize_file("data/training_data/"+(*training_file), training_lines);
+	test_labels = getLabels("data/test_labels/t10k-labels.idx1-ubyte",TEST_LINES);
 
-	    training_labels = getLabels("data/training_labels/train-labels.idx1-ubyte",training_lines);
+	for (vector<string>::iterator training_file = training_files.begin() ; training_file != training_files.end(); ++training_file){
 
-	    testing_x = binarize_file("data/test_data/"+ (*training_file).substr(0,13)+"test.txt", test_lines);
+		name_file_training = (*training_file);
+		name_file_test     = getPrefix(*training_file) + "_thresholdtest.txt";
+		
+	  	input_x = binarize_file("data/training_data/"+ name_file_training, TRAINING_LINES);
 
-	    test_labels = getLabels("data/test_labels/t10k-labels.idx1-ubyte",test_lines);
-	    
+	    testing_x = binarize_file("data/test_data/"+ name_file_test, TEST_LINES);
+ 
+	    for(unshort bleaching = 0; bleaching<MAX_BLEACHING+1;bleaching++){
 
-		WiSARD *w = new WiSARD(retinaLength, numBitsAddr);
+	    	if(bleaching==0)  w = new WiSARD(retinaLength, numBitsAddr, false);
+	    	else              w = new WiSARD(retinaLength, numBitsAddr, true, 0.1, bleaching);
 
-		w->fit(input_x, training_labels);
+			w->fit(input_x, training_labels);
 
-		result = w->predict(testing_x);
+			result = w->predict(testing_x);
 
+			delete w;
 
-		counter = 0;
+			counter = 0;
+			for (unshort i = 0; i < TEST_LINES; i++){
 
-		for (unshort i = 0; i < test_lines; i++){
+				if(result[i]==test_labels[i]) counter++;
+			}
 
-			if(result[i]==test_labels[i]) counter++;
+			acuracy = counter*1.0/TEST_LINES;
+
+			contents += getPrefix(*training_file) +" "+ to_string(acuracy)+ " "+ to_string(bleaching)+ "\n";
+
+			cout<<"Threshold: "<<getPrefix(*training_file)<<". Acuracia: "<< acuracy <<". Bleaching: "<< bleaching <<endl;
+
 		}
-		cout<<"Threshold :"<<(*training_file).substr(0,3)<<". Acuracia: "<<counter*1.0/test_lines<<endl;
-
-		delete w;
 
 	}
 
-	//cout<< training_files[0].substr(0,13)<<endl;
-
-
-
+	save_contents(contents);
 
 	return 0;
 }
