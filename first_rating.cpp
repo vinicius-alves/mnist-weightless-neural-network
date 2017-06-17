@@ -2,11 +2,11 @@
 #include <string>
 #include <vector>
 #include <wann/WiSARD.hpp>
-#include "binarize.cpp"
-#include "label_reader.cpp"
-#include "look_files.cpp"
-#include "writer.cpp"
-#include "prefix.cpp"
+#include "libs/binarize.cpp"
+#include "libs/label_reader.cpp"
+#include "libs/look_files.cpp"
+#include "libs/writer.cpp"
+#include "libs/prefix.cpp"
 
 #define TRAINING_LINES 60000
 #define TEST_LINES 10000
@@ -15,6 +15,9 @@
 using namespace wann;
 using namespace std;
 
+//Treino variando bleaching e threshold
+//to compile: clang++ first_rating.cpp -o first -std=c++11 -lwann
+
 typedef unsigned short unshort;
 
 
@@ -22,7 +25,7 @@ int main(){
 
 	WiSARD *w;
 	const int retinaLength = 784;
-	const int numBitsAddr = 45;
+	const int numBitsAddr = 40;
 
 	vector<vector<int>> input_x;
 	vector<vector<int>> testing_x;
@@ -69,7 +72,7 @@ int main(){
 
 			acuracy = counter*1.0/TEST_LINES;
 
-			contents += getPrefix(*training_file) +" "+ to_string(acuracy)+ " "+ to_string(bleaching)+ "\n";
+			contents += getPrefix(*training_file) +" "+ to_string(bleaching)+ " "+ to_string(acuracy)+ "\n";
 
 			cout<<"Threshold: "<<getPrefix(*training_file)<<". Acuracia: "<< acuracy <<". Bleaching: "<< bleaching <<endl;
 

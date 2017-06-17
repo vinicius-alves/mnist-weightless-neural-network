@@ -1,0 +1,4 @@
+Use para gerar gráficos com o gnuplot para os resultados
+
+plot 'results.txt' using 2:3 pointsize 1 pointtype 7
+splot 'results.txt' using 1:2:3 with points palette pointsize 1 pointtype 7
